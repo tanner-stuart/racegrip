@@ -314,6 +314,19 @@
   function lerp(a,b,t){ return a + (b-a)*t; }
   function easeInOutSine(t){ return -(Math.cos(Math.PI * t) - 1) / 2; }
 
+  function roundedRectPath(ctx, x, y, w, h, r) {
+    const radius = Math.max(0, Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2));
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + w - radius, y);
+    ctx.arcTo(x + w, y, x + w, y + radius, radius);
+    ctx.lineTo(x + w, y + h - radius);
+    ctx.arcTo(x + w, y + h, x + w - radius, y + h, radius);
+    ctx.lineTo(x + radius, y + h);
+    ctx.arcTo(x, y + h, x, y + h - radius, radius);
+    ctx.lineTo(x, y + radius);
+    ctx.arcTo(x, y, x + radius, y, radius);
+  }
+
   function toCanvasX(x){ return gcx + x * gr; }
   function toCanvasY(y){ return gcy - y * gr; }
 
@@ -512,14 +525,14 @@
     cctx.strokeStyle = "#0a0d14";
     cctx.lineWidth = 2;
     cctx.beginPath();
-    cctx.roundRect(-bodyW/2, -bodyH/2, bodyW, bodyH, 8);
+    roundedRectPath(cctx, -bodyW/2, -bodyH/2, bodyW, bodyH, 8);
     cctx.fill();
     cctx.stroke();
 
     // windshield
     cctx.fillStyle = "rgba(230,240,255,0.55)";
     cctx.beginPath();
-    cctx.roundRect(-8, -10, 18, 20, 6);
+    roundedRectPath(cctx, -8, -10, 18, 20, 6);
     cctx.fill();
 
     // nose arrow
@@ -760,8 +773,6 @@
           {turning:0.48, braking:0.00, throttle:0.82},
           {turning:0.18, braking:0.00, throttle:0.96}
         ]
-      };
-    }
       };
     }
     return null;
